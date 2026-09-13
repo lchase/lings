@@ -1,6 +1,10 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { authClient, clearStoredAuthToken } from '../lib/auth-client'
+import {
+  authClient,
+  clearStoredAuthToken,
+  getStoredAuthToken,
+} from '../lib/auth-client'
 
 export const Route = createFileRoute('/dashboard')({ component: DashboardPage })
 
@@ -14,13 +18,19 @@ function DashboardPage() {
   const [state, setState] = useState<LoadState>({ status: 'loading' })
 
   useEffect(() => {
-    authClient.getSession().then(({ data }) => {
-      if (!data?.session) {
+    // Hits the same protected /api/me route this ticket's acceptance
+    // criteria are verified against (401 without a token, 200 with one),
+    // rather than a separate authClient.getSession() call.
+    fetch('/api/me', {
+      headers: { Authorization: `Bearer ${getStoredAuthToken()}` },
+    }).then(async (res) => {
+      if (res.status === 401) {
         setState({ status: 'unauthenticated' })
         navigate({ to: '/login' })
         return
       }
-      setState({ status: 'authenticated', email: data.user.email })
+      const { user } = await res.json()
+      setState({ status: 'authenticated', email: user.email })
     })
   }, [navigate])
 

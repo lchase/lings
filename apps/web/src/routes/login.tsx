@@ -29,7 +29,10 @@ function LoginPage() {
 
     const { error: authError } =
       mode === 'sign-up'
-        ? await authClient.signUp.email({ name, email, password }, { onSuccess })
+        ? await authClient.signUp.email(
+            { name, email, password },
+            { onSuccess },
+          )
         : await authClient.signIn.email({ email, password }, { onSuccess })
 
     setSubmitting(false)
