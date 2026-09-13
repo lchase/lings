@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.turbo/
+*.db
+*.db-journal
+*.tsbuildinfo
+.DS_Store
+src-tauri/target/
+.env
+.env.local
