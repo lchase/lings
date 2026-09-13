@@ -1,3 +1,3 @@
 export function Placeholder() {
-  return <span>@lings/ui</span>;
+  return <span>@lings/ui</span>
 }

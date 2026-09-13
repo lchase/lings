@@ -1,1 +1,2 @@
-export type SessionStatus = "idle" | "generating" | "waiting-approval" | "error" | "done";
+export type SessionStatus =
+  'idle' | 'generating' | 'waiting-approval' | 'error' | 'done'

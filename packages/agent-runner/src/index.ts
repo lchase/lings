@@ -1,3 +1,3 @@
-import type { SessionStatus } from "@lings/shared-types";
+import type { SessionStatus } from '@lings/shared-types'
 
-export const PLACEHOLDER_STATUS: SessionStatus = "idle";
+export const PLACEHOLDER_STATUS: SessionStatus = 'idle'
