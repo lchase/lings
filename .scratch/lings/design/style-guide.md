@@ -4,10 +4,23 @@ Lings is a control panel for directing a small fleet of coding agents — ticket
 playbooks, live sessions, rules. It's a dense, data-forward tool used for hours
 at a stretch by its own builder, not a marketing site. The identity below reads
 as an **instrument panel / dispatch board**: hairline dividers, mono-set data
-and status, restrained accent color reserved for signal, not decoration. It
-replaces the unmodified TanStack-starter "coastal glass" theme ticket 01
-scaffolded (soft teal islands, blurred glassmorphism, "TanStack Start" branding
-in the header/footer) — that theme described the starter kit, not Lings.
+and status, one deliberate violet accent reserved for calls to action, not
+decoration. It replaces the unmodified TanStack-starter "coastal glass" theme
+ticket 01 scaffolded (soft teal islands, blurred glassmorphism, "TanStack
+Start" branding in the header/footer) — that theme described the starter kit,
+not Lings.
+
+The first pass at this (amber-on-near-black) was rejected as "basically what
+all AI builds" — the near-black-plus-single-bright-accent formula is a known
+generic-AI-design default regardless of which accent hue fills it in. The fix
+per the human's direction: neither surface color is a true neutral — dark
+mode's ground carries a violet undertone rather than flat slate-black, light
+mode's carries the same undertone rather than flat white — and violet is the
+one CTA/attention color, with the rest of the palette (status colors, `ink`)
+built as a genuinely separate hue set around it rather than tints of the
+accent. That coherent-but-not-monochrome relationship is the actual design
+choice; swapping the accent hex alone would not have fixed the underlying
+problem.
 
 Home (`/`) and About (`/about`) still carry scaffold copy ("TanStack Start
 Base Template", feature-card blurbs about the starter). Rewriting that copy is
@@ -20,30 +33,35 @@ their copy to describe Lings, not the starter.
 Six named brand colors; each resolves differently per theme via CSS custom
 properties (see `apps/web/src/styles.css`). Dark is the primary mode — this is
 a tool developers live in — but light is fully specced, not an afterthought.
+Neither mode's `paper`/`panel`/`ink` is a true neutral gray: all three carry a
+faint violet undertone so the accent feels native to the palette instead of a
+bright color dropped onto a generic gray shell.
 
 | Name | Role | Light | Dark |
 |---|---|---|---|
-| `ink` | primary text, headings | `#14181d` | `#e8ebee` |
-| `ink-soft` | secondary text, captions | `#5a6169` | `#9aa4ad` |
-| `paper` | page background | `#f3f1ec` | `#0c0f13` |
-| `panel` | card/table/input surface | `#ffffff` | `#151a20` |
-| `wire` | borders, dividers, hairlines | `#dcd8ce` | `#262d35` |
-| `signal` | brand accent — primary actions, focus, "live" | `#c07a1f` | `#e2a63c` |
+| `ink` | primary text, headings | `#1c1626` | `#ece7f5` |
+| `ink-soft` | secondary text, captions | `#6b6178` | `#a79bbd` |
+| `paper` | page background | `#f6f3fa` | `#16141c` |
+| `panel` | card/table/input surface | `#ffffff` | `#1e1b26` |
+| `wire` | borders, dividers, hairlines | `#ded6ea` | `#322d3d` |
+| `signal` | brand accent — primary actions, focus, "live" | `#7c3aed` | `#a878f0` |
 
 Status colors (ticket status, session status — the one recurring motif, see
-Signature below) are a fixed semantic set, not derived from the brand accent:
+Signature below) are a **fixed semantic set deliberately built from different
+hues than `signal`** — reusing violet for status would both muddy "this needs
+your attention" and read as monochrome:
 
 | Status | Color | Use |
 |---|---|---|
-| `backlog` | `wire`-toned neutral | not started |
-| `in_progress` / `generating` | `signal` amber | active |
-| `qa` / `waiting-approval` | `#8c6fc2` violet | needs a human |
-| `done` | `#4c9a6a` green | finished |
-| `error` | `#c4524a` red | failed |
+| `backlog` | `#8983a3` / `#837a94` muted lavender-gray | not started |
+| `in_progress` / `generating` | `#c48a1f` / `#e0a83f` amber | active |
+| `qa` / `waiting-approval` | `#2597a3` / `#45c2cf` teal | needs a human |
+| `done` | `#3f8a5f` / `#57b37e` green | finished |
+| `error` | `#c23b4c` / `#e2707d` red | failed |
 
-Never use `signal` for decoration (backgrounds, dividers) — it means "this
-needs your attention or is the primary action," and loses that meaning if it
-shows up everywhere.
+(light / dark, in that order). Never use `signal` for decoration (backgrounds,
+dividers, status) — it means "this needs your attention or is the primary
+action," and loses that meaning if it shows up everywhere.
 
 ## Type
 
@@ -81,7 +99,7 @@ Implemented as `@lings/ui` primitives (`Button`, `Input`, `Select`,
 `Textarea`, `Table`, `Card`, `StatusBadge`) so `apps/web` and `apps/desktop`
 share one implementation instead of hand-rolled Tailwind per screen.
 
-- **Button** — `primary` (solid `signal`, dark text), `secondary` (`wire`
+- **Button** — `primary` (solid `signal`, white text), `secondary` (`wire`
   border, `panel` background), `danger` (red border/text, transparent fill
   until hover). One size for now; a `sm` variant can be added when a ticket
   needs it, not speculatively.

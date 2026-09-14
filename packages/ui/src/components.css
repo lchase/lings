@@ -28,7 +28,7 @@
 .lings-btn-primary {
   background: var(--signal);
   border-color: var(--signal);
-  color: #14181d;
+  color: #ffffff;
 }
 .lings-btn-primary:hover:not(:disabled) {
   filter: brightness(1.06);

@@ -116,7 +116,7 @@ function FolderNode({
           onClick={() => onSelect(folder?.id ?? null)}
           className={`rounded-[var(--radius-control)] px-2 py-0.5 font-mono text-sm ${
             isSelected
-              ? 'bg-[var(--signal)] text-[#14181d]'
+              ? 'bg-[var(--signal)] text-white'
               : 'text-[var(--ink)] hover:bg-[var(--panel)]'
           }`}
         >
