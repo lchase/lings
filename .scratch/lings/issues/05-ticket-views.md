@@ -1,8 +1,8 @@
-# 04 — Ticket views (kanban/gantt/list)
+# 05 — Ticket views (kanban/gantt/list)
 
 **What to build:** The same tickets from the table view, rendered as a kanban board, a gantt chart, and a list — same underlying data, three lenses.
 
-**Blocked by:** 03 — Folders & tickets.
+**Blocked by:** 03 — Folders & tickets, 04 — Design system & style guide.
 
 **Status:** ready-for-agent
 

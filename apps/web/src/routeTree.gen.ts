@@ -13,8 +13,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as StyleguideRouteImport } from './routes/styleguide'
+import { Route as TicketsRouteImport } from './routes/tickets'
+import { Route as ApiFoldersRouteImport } from './routes/api/folders'
 import { Route as ApiMeRouteImport } from './routes/api/me'
+import { Route as ApiTicketsRouteImport } from './routes/api/tickets'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiTicketsIdRouteImport } from './routes/api/tickets/$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -36,9 +41,29 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StyleguideRoute = StyleguideRouteImport.update({
+  id: '/styleguide',
+  path: '/styleguide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TicketsRoute = TicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFoldersRoute = ApiFoldersRouteImport.update({
+  id: '/api/folders',
+  path: '/api/folders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMeRoute = ApiMeRouteImport.update({
   id: '/api/me',
   path: '/api/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTicketsRoute = ApiTicketsRouteImport.update({
+  id: '/api/tickets',
+  path: '/api/tickets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -46,22 +71,37 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTicketsIdRoute = ApiTicketsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiTicketsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/styleguide': typeof StyleguideRoute
+  '/tickets': typeof TicketsRoute
+  '/api/folders': typeof ApiFoldersRoute
   '/api/me': typeof ApiMeRoute
+  '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/styleguide': typeof StyleguideRoute
+  '/tickets': typeof TicketsRoute
+  '/api/folders': typeof ApiFoldersRoute
   '/api/me': typeof ApiMeRoute
+  '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -69,23 +109,54 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/styleguide': typeof StyleguideRoute
+  '/tickets': typeof TicketsRoute
+  '/api/folders': typeof ApiFoldersRoute
   '/api/me': typeof ApiMeRoute
+  '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/about' | '/dashboard' | '/login' | '/api/me' | '/api/auth/$'
+    | '/'
+    | '/about'
+    | '/dashboard'
+    | '/login'
+    | '/styleguide'
+    | '/tickets'
+    | '/api/folders'
+    | '/api/me'
+    | '/api/tickets'
+    | '/api/auth/$'
+    | '/api/tickets/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/dashboard' | '/login' | '/api/me' | '/api/auth/$'
+  to:
+    | '/'
+    | '/about'
+    | '/dashboard'
+    | '/login'
+    | '/styleguide'
+    | '/tickets'
+    | '/api/folders'
+    | '/api/me'
+    | '/api/tickets'
+    | '/api/auth/$'
+    | '/api/tickets/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/dashboard'
     | '/login'
+    | '/styleguide'
+    | '/tickets'
+    | '/api/folders'
     | '/api/me'
+    | '/api/tickets'
     | '/api/auth/$'
+    | '/api/tickets/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,7 +164,11 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  StyleguideRoute: typeof StyleguideRoute
+  TicketsRoute: typeof TicketsRoute
+  ApiFoldersRoute: typeof ApiFoldersRoute
   ApiMeRoute: typeof ApiMeRoute
+  ApiTicketsRoute: typeof ApiTicketsRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -127,11 +202,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/styleguide': {
+      id: '/styleguide'
+      path: '/styleguide'
+      fullPath: '/styleguide'
+      preLoaderRoute: typeof StyleguideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tickets': {
+      id: '/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof TicketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/folders': {
+      id: '/api/folders'
+      path: '/api/folders'
+      fullPath: '/api/folders'
+      preLoaderRoute: typeof ApiFoldersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/me': {
       id: '/api/me'
       path: '/api/me'
       fullPath: '/api/me'
       preLoaderRoute: typeof ApiMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tickets': {
+      id: '/api/tickets'
+      path: '/api/tickets'
+      fullPath: '/api/tickets'
+      preLoaderRoute: typeof ApiTicketsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -141,15 +244,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/tickets/$id': {
+      id: '/api/tickets/$id'
+      path: '/$id'
+      fullPath: '/api/tickets/$id'
+      preLoaderRoute: typeof ApiTicketsIdRouteImport
+      parentRoute: typeof ApiTicketsRoute
+    }
   }
 }
+
+interface ApiTicketsRouteChildren {
+  ApiTicketsIdRoute: typeof ApiTicketsIdRoute
+}
+
+const ApiTicketsRouteChildren: ApiTicketsRouteChildren = {
+  ApiTicketsIdRoute: ApiTicketsIdRoute,
+}
+
+const ApiTicketsRouteWithChildren = ApiTicketsRoute._addFileChildren(
+  ApiTicketsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  StyleguideRoute: StyleguideRoute,
+  TicketsRoute: TicketsRoute,
+  ApiFoldersRoute: ApiFoldersRoute,
   ApiMeRoute: ApiMeRoute,
+  ApiTicketsRoute: ApiTicketsRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

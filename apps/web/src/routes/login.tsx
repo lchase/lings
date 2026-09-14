@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { Button, Input } from '@lings/ui'
 import { authClient, setStoredAuthToken } from '../lib/auth-client'
 
 export const Route = createFileRoute('/login')({ component: LoginPage })
@@ -50,29 +51,26 @@ function LoginPage() {
   return (
     <main className="page-wrap px-4 py-14">
       <div className="mx-auto max-w-sm">
-        <h1 className="mb-6 text-2xl font-bold">
+        <h1 className="display-title mb-6 text-2xl font-bold text-[var(--ink)]">
           {mode === 'sign-up' ? 'Create an account' : 'Log in'}
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           {mode === 'sign-up' && (
-            <input
-              className="rounded border px-3 py-2"
+            <Input
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           )}
-          <input
-            className="rounded border px-3 py-2"
+          <Input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            className="rounded border px-3 py-2"
+          <Input
             type="password"
             placeholder="Password"
             value={password}
@@ -80,18 +78,18 @@ function LoginPage() {
             required
             minLength={8}
           />
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="rounded bg-black px-3 py-2 text-white disabled:opacity-50"
-          >
+          {error && (
+            <p className="text-sm" style={{ color: 'var(--status-error)' }}>
+              {error}
+            </p>
+          )}
+          <Button type="submit" variant="primary" disabled={submitting}>
             {mode === 'sign-up' ? 'Sign up' : 'Log in'}
-          </button>
+          </Button>
         </form>
         <button
           type="button"
-          className="mt-4 text-sm underline"
+          className="mt-4 text-sm text-[var(--ink-soft)] underline hover:text-[var(--signal)]"
           onClick={() => setMode(mode === 'sign-up' ? 'sign-in' : 'sign-up')}
         >
           {mode === 'sign-up'

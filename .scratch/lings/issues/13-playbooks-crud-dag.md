@@ -1,8 +1,8 @@
-# 12 — Playbooks: CRUD/DAG editor, lock/versioning
+# 13 — Playbooks: CRUD/DAG editor, lock/versioning
 
-**What to build:** A global, reusable playbook library — build a DAG of steps (bash and approval types only for this ticket; agent-call comes in ticket 15), lock/unlock a playbook, and have an edit-while-unlocked create a new version rather than mutate history.
+**What to build:** A global, reusable playbook library — build a DAG of steps (bash and approval types only for this ticket; agent-call comes in ticket 16), lock/unlock a playbook, and have an edit-while-unlocked create a new version rather than mutate history.
 
-**Blocked by:** 03 — Folders & tickets.
+**Blocked by:** 03 — Folders & tickets, 04 — Design system & style guide.
 
 **Status:** ready-for-agent
 

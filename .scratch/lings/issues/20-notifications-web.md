@@ -1,8 +1,8 @@
-# 19 — Notifications (web)
+# 20 — Notifications (web)
 
 **What to build:** A fleet-wide unread badge that lights up when any session the user has access to transitions to `waiting-approval` or `error`, even if it's not currently subscribed/open, and clears when the user views that session.
 
-**Blocked by:** 07 — WebSocket protocol + live fleet view.
+**Blocked by:** 08 — WebSocket protocol + live fleet view.
 
 **Status:** ready-for-agent
 

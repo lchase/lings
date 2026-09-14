@@ -1,4 +1,4 @@
-# 06 — AgentRunner interface + mock adapter
+# 07 — AgentRunner interface + mock adapter
 
 **What to build:** The `AgentRunner`/`AgentHandle` contract in `packages/agent-runner`, plus a fake in-memory adapter that emits scripted `delta`/`status`/`cost` events — no real LLM call. This is the seam every later agent-facing ticket builds against.
 

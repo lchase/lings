@@ -1,0 +1,62 @@
+/* Lings design tokens — see .scratch/lings/design/style-guide.md.
+   Imported once by each consuming app (apps/web/src/styles.css does this
+   today; apps/desktop can import it the same way once it adopts @lings/ui). */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --ink: #1c1626;
+  --ink-soft: #6b6178;
+  --paper: #f6f3fa;
+  --panel: #ffffff;
+  --wire: #ded6ea;
+  --signal: #7c3aed;
+  --signal-soft: rgba(124, 58, 237, 0.12);
+
+  --status-backlog: #8983a3;
+  --status-progress: #c48a1f;
+  --status-qa: #2597a3;
+  --status-done: #3f8a5f;
+  --status-error: #c23b4c;
+
+  --radius-control: 0.375rem;
+  --radius-panel: 0.5rem;
+}
+
+:root[data-theme='dark'] {
+  --ink: #ece7f5;
+  --ink-soft: #a79bbd;
+  --paper: #16141c;
+  --panel: #1e1b26;
+  --wire: #322d3d;
+  --signal: #a878f0;
+  --signal-soft: rgba(168, 120, 240, 0.16);
+
+  --status-backlog: #837a94;
+  --status-progress: #e0a83f;
+  --status-qa: #45c2cf;
+  --status-done: #57b37e;
+  --status-error: #e2707d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ink: #ece7f5;
+    --ink-soft: #a79bbd;
+    --paper: #16141c;
+    --panel: #1e1b26;
+    --wire: #322d3d;
+    --signal: #a878f0;
+    --signal-soft: rgba(168, 120, 240, 0.16);
+
+    --status-backlog: #837a94;
+    --status-progress: #e0a83f;
+    --status-qa: #45c2cf;
+    --status-done: #57b37e;
+    --status-error: #e2707d;
+  }
+}

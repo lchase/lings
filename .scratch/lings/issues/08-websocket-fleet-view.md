@@ -1,8 +1,8 @@
-# 07 — WebSocket protocol + live fleet view
+# 08 — WebSocket protocol + live fleet view
 
-**What to build:** A single multiplexed WebSocket connection per browser tab, authenticated with the bearer token, that pushes `status`/`cost`/`delta` events for subscribed sessions straight into the TanStack Query cache. A fleet view lets a user start a mock agent session (via the ticket 06 adapter) and watch it live.
+**What to build:** A single multiplexed WebSocket connection per browser tab, authenticated with the bearer token, that pushes `status`/`cost`/`delta` events for subscribed sessions straight into the TanStack Query cache. A fleet view lets a user start a mock agent session (via the ticket 07 adapter) and watch it live.
 
-**Blocked by:** 02 — Auth, 06 — AgentRunner interface + mock adapter.
+**Blocked by:** 02 — Auth, 07 — AgentRunner interface + mock adapter, 04 — Design system & style guide.
 
 **Status:** ready-for-agent
 

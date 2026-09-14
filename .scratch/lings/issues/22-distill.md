@@ -1,8 +1,8 @@
-# 21 — Distill
+# 22 — Distill
 
 **What to build:** Turn a finished ad-hoc agent session/conversation into a brand-new reusable playbook — formalizing informal manual work into a formal DAG recipe.
 
-**Blocked by:** 12 — Playbooks: CRUD/DAG editor, lock/versioning, 16 — Playbook runs & ticket linkage.
+**Blocked by:** 13 — Playbooks: CRUD/DAG editor, lock/versioning, 17 — Playbook runs & ticket linkage.
 
 **Status:** ready-for-agent
 

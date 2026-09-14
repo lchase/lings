@@ -1,8 +1,8 @@
-# 17 — Playbook triggering (cron)
+# 18 — Playbook triggering (cron)
 
 **What to build:** Schedule a playbook to run on a cron expression, fired unattended by an in-process poller — no separate worker infrastructure.
 
-**Blocked by:** 15 — agent-call step + approval gate.
+**Blocked by:** 16 — agent-call step + approval gate.
 
 **Status:** ready-for-agent
 
