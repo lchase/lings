@@ -1,5 +1,15 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
+import {
+  Button,
+  Card,
+  Input,
+  Select,
+  StatusBadge,
+  Table,
+  Textarea,
+} from '@lings/ui'
+import type { StatusTone } from '@lings/ui'
 import { getStoredAuthToken } from '../lib/auth-client'
 
 export const Route = createFileRoute('/tickets')({ component: TicketsPage })
@@ -21,6 +31,13 @@ const STATUS_LABEL: Record<TicketStatus, string> = {
   in_progress: 'In Progress',
   qa: 'QA',
   done: 'Done',
+}
+
+const STATUS_TONE: Record<TicketStatus, StatusTone> = {
+  backlog: 'backlog',
+  in_progress: 'progress',
+  qa: 'qa',
+  done: 'done',
 }
 
 async function api(path: string, init?: RequestInit) {
@@ -79,14 +96,14 @@ function FolderNode({
   return (
     <li>
       <div
-        className="flex items-center gap-1 rounded px-1 py-0.5"
+        className="flex items-center gap-1 rounded-[var(--radius-control)] px-1 py-0.5"
         style={{ paddingLeft: depth * 16 }}
       >
         {children.length > 0 ? (
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className="w-4 text-xs"
+            className="w-4 text-xs text-[var(--ink-soft)]"
             aria-label={expanded ? 'Collapse' : 'Expand'}
           >
             {expanded ? '▾' : '▸'}
@@ -97,14 +114,18 @@ function FolderNode({
         <button
           type="button"
           onClick={() => onSelect(folder?.id ?? null)}
-          className={`rounded px-2 py-0.5 text-sm ${isSelected ? 'bg-black text-white' : 'hover:bg-gray-100'}`}
+          className={`rounded-[var(--radius-control)] px-2 py-0.5 font-mono text-sm ${
+            isSelected
+              ? 'bg-[var(--signal)] text-[#14181d]'
+              : 'text-[var(--ink)] hover:bg-[var(--panel)]'
+          }`}
         >
           {folder ? folder.name : 'All folders'}
         </button>
         <button
           type="button"
           onClick={() => setAdding((v) => !v)}
-          className="ml-1 text-xs text-gray-500 hover:underline"
+          className="ml-1 text-xs text-[var(--ink-soft)] hover:text-[var(--signal)] hover:underline"
         >
           + subfolder
         </button>
@@ -116,16 +137,15 @@ function FolderNode({
           className="flex gap-1 py-1"
           style={{ paddingLeft: (depth + 1) * 16 + 16 }}
         >
-          <input
+          <Input
             autoFocus
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Folder name"
-            className="rounded border px-2 py-0.5 text-sm"
           />
-          <button type="submit" className="rounded border px-2 py-0.5 text-sm">
+          <Button type="submit" variant="secondary">
             Add
-          </button>
+          </Button>
         </form>
       )}
 
@@ -189,76 +209,68 @@ function NewTicketForm({
 
   if (!open) {
     return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="rounded border px-3 py-2 text-sm"
-      >
+      <Button type="button" variant="primary" onClick={() => setOpen(true)}>
         + New ticket
-      </button>
+      </Button>
     )
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mb-4 flex flex-col gap-2 rounded border p-3"
-    >
-      <input
-        required
-        autoFocus
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Title"
-        className="rounded border px-2 py-1 text-sm"
-      />
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description"
-        className="rounded border px-2 py-1 text-sm"
-      />
-      <div className="flex flex-wrap gap-2">
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value as TicketStatus)}
-          className="rounded border px-2 py-1 text-sm"
-        >
-          {Object.entries(STATUS_LABEL).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="rounded border px-2 py-1 text-sm"
+    <Card className="mb-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <Input
+          required
+          autoFocus
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Title"
+          className="w-full"
         />
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          className="rounded border px-2 py-1 text-sm"
+        <Textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description"
+          className="w-full"
         />
-      </div>
-      <div className="flex gap-2">
-        <button
-          type="submit"
-          className="rounded bg-black px-3 py-1.5 text-sm text-white"
-        >
-          Create
-        </button>
-        <button
-          type="button"
-          onClick={() => setOpen(false)}
-          className="rounded border px-3 py-1.5 text-sm"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
+        <div className="flex flex-wrap gap-2">
+          <Select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as TicketStatus)}
+            className="w-auto"
+          >
+            {Object.entries(STATUS_LABEL).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </Select>
+          <Input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="w-auto"
+          />
+          <Input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            className="w-auto"
+          />
+        </div>
+        <div className="flex gap-2">
+          <Button type="submit" variant="primary">
+            Create
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => setOpen(false)}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </Card>
   )
 }
 
@@ -296,71 +308,71 @@ function TicketRow({
 
   if (editing) {
     return (
-      <tr className="border-t">
-        <td className="p-2">
-          <input
+      <tr>
+        <td>
+          <Input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="w-full"
           />
         </td>
-        <td className="p-2">
-          <select
+        <td>
+          <Select
             value={status}
             onChange={(e) => setStatus(e.target.value as TicketStatus)}
-            className="rounded border px-2 py-1 text-sm"
+            className="w-auto"
           >
             {Object.entries(STATUS_LABEL).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
-          </select>
+          </Select>
         </td>
-        <td className="p-2">
-          <input
+        <td>
+          <Input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="rounded border px-2 py-1 text-sm"
+            className="w-auto"
           />
         </td>
-        <td className="p-2">
-          <input
+        <td>
+          <Input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="rounded border px-2 py-1 text-sm"
+            className="w-auto"
           />
         </td>
-        <td className="p-2">
-          <button
-            onClick={handleSave}
-            className="mr-2 rounded border px-2 py-1 text-xs"
-          >
+        <td className="whitespace-nowrap">
+          <Button variant="primary" onClick={handleSave} className="mr-2">
             Save
-          </button>
-          <button
-            onClick={() => setEditing(false)}
-            className="rounded border px-2 py-1 text-xs"
-          >
+          </Button>
+          <Button variant="secondary" onClick={() => setEditing(false)}>
             Cancel
-          </button>
+          </Button>
         </td>
       </tr>
     )
   }
 
   return (
-    <tr
-      className="cursor-pointer border-t hover:bg-gray-50"
-      onClick={() => setEditing(true)}
-    >
-      <td className="p-2">{ticket.title}</td>
-      <td className="p-2">{STATUS_LABEL[ticket.status]}</td>
-      <td className="p-2">{ticket.startDate?.slice(0, 10) ?? '—'}</td>
-      <td className="p-2">{ticket.dueDate?.slice(0, 10) ?? '—'}</td>
-      <td className="p-2 text-xs text-gray-400">click to edit</td>
+    <tr className="cursor-pointer" onClick={() => setEditing(true)}>
+      <td className="font-medium text-[var(--ink)]">{ticket.title}</td>
+      <td>
+        <StatusBadge
+          tone={STATUS_TONE[ticket.status]}
+          label={STATUS_LABEL[ticket.status]}
+        />
+      </td>
+      <td className="font-mono text-xs text-[var(--ink-soft)]">
+        {ticket.startDate?.slice(0, 10) ?? '—'}
+      </td>
+      <td className="font-mono text-xs text-[var(--ink-soft)]">
+        {ticket.dueDate?.slice(0, 10) ?? '—'}
+      </td>
+      <td className="text-xs text-[var(--ink-soft)]">edit</td>
     </tr>
   )
 }
@@ -400,7 +412,7 @@ function TicketsPage() {
 
   if (!authed || !folders) {
     return (
-      <main className="page-wrap px-4 py-14">
+      <main className="page-wrap px-4 py-14 text-[var(--ink-soft)]">
         <p>Loading…</p>
       </main>
     )
@@ -409,9 +421,7 @@ function TicketsPage() {
   return (
     <main className="page-wrap flex gap-8 px-4 py-14">
       <aside className="w-64 flex-shrink-0">
-        <h2 className="mb-2 text-sm font-semibold uppercase text-gray-500">
-          Folders
-        </h2>
+        <h2 className="island-kicker mb-2">Folders</h2>
         <ul>
           <FolderNode
             folder={null}
@@ -425,8 +435,10 @@ function TicketsPage() {
       </aside>
 
       <section className="min-w-0 flex-1">
-        <h1 className="mb-1 text-2xl font-bold">{selectedFolderName}</h1>
-        <p className="mb-4 text-sm text-gray-500">
+        <h1 className="display-title mb-1 text-2xl font-bold text-[var(--ink)]">
+          {selectedFolderName}
+        </h1>
+        <p className="mb-4 text-sm text-[var(--ink-soft)]">
           {selectedFolderId
             ? 'Tickets in this folder and its subfolders.'
             : 'Tickets across the whole tree.'}
@@ -442,18 +454,18 @@ function TicketsPage() {
         )}
 
         {tickets === null ? (
-          <p>Loading tickets…</p>
+          <p className="text-sm text-[var(--ink-soft)]">Loading tickets…</p>
         ) : tickets.length === 0 ? (
-          <p className="text-sm text-gray-500">No tickets here yet.</p>
+          <p className="text-sm text-[var(--ink-soft)]">No tickets here yet.</p>
         ) : (
-          <table className="w-full border-collapse text-sm">
+          <Table>
             <thead>
-              <tr className="text-left text-xs uppercase text-gray-500">
-                <th className="p-2">Title</th>
-                <th className="p-2">Status</th>
-                <th className="p-2">Start</th>
-                <th className="p-2">Due</th>
-                <th className="p-2" />
+              <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Start</th>
+                <th>Due</th>
+                <th />
               </tr>
             </thead>
             <tbody>
@@ -471,7 +483,7 @@ function TicketsPage() {
                 />
               ))}
             </tbody>
-          </table>
+          </Table>
         )}
       </section>
     </main>

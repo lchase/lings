@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
+import { Button } from '@lings/ui'
 import {
   authClient,
   clearStoredAuthToken,
@@ -42,7 +43,7 @@ function DashboardPage() {
 
   if (state.status !== 'authenticated') {
     return (
-      <main className="page-wrap px-4 py-14">
+      <main className="page-wrap px-4 py-14 text-[var(--ink-soft)]">
         <p>Loading…</p>
       </main>
     )
@@ -50,15 +51,13 @@ function DashboardPage() {
 
   return (
     <main className="page-wrap px-4 py-14">
-      <h1 className="mb-4 text-2xl font-bold">Dashboard</h1>
-      <p className="mb-6">Logged in as {state.email}.</p>
-      <button
-        type="button"
-        onClick={handleLogout}
-        className="rounded border px-3 py-2"
-      >
+      <h1 className="display-title mb-4 text-2xl font-bold text-[var(--ink)]">
+        Dashboard
+      </h1>
+      <p className="mb-6 text-[var(--ink-soft)]">Logged in as {state.email}.</p>
+      <Button type="button" variant="secondary" onClick={handleLogout}>
         Log out
-      </button>
+      </Button>
     </main>
   )
 }
