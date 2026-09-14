@@ -274,6 +274,248 @@ function NewTicketForm({
   )
 }
 
+const STATUS_ORDER: TicketStatus[] = ['backlog', 'in_progress', 'qa', 'done']
+
+type ViewName = 'table' | 'kanban' | 'gantt' | 'list'
+
+const VIEW_LABEL: Record<ViewName, string> = {
+  table: 'Table',
+  kanban: 'Kanban',
+  gantt: 'Gantt',
+  list: 'List',
+}
+
+function ViewTabs({
+  view,
+  onChange,
+}: {
+  view: ViewName
+  onChange: (v: ViewName) => void
+}) {
+  return (
+    <div className="mb-4 inline-flex rounded-[var(--radius-control)] border border-[var(--wire)] p-0.5">
+      {(Object.keys(VIEW_LABEL) as ViewName[]).map((v) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => onChange(v)}
+          className={`rounded-[calc(var(--radius-control)-2px)] px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.04em] ${
+            view === v
+              ? 'bg-[var(--signal)] text-white'
+              : 'text-[var(--ink-soft)] hover:text-[var(--ink)]'
+          }`}
+        >
+          {VIEW_LABEL[v]}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function KanbanCard({
+  ticket,
+  onDragStart,
+}: {
+  ticket: Ticket
+  onDragStart: (e: React.DragEvent, ticket: Ticket) => void
+}) {
+  return (
+    <div
+      draggable
+      onDragStart={(e) => onDragStart(e, ticket)}
+      className="cursor-grab rounded-[var(--radius-control)] border border-[var(--wire)] bg-[var(--panel)] p-2 active:cursor-grabbing"
+    >
+      <p className="text-sm font-medium text-[var(--ink)]">{ticket.title}</p>
+      <p className="mt-1 font-mono text-xs text-[var(--ink-soft)]">
+        {ticket.startDate?.slice(0, 10) ?? '—'} →{' '}
+        {ticket.dueDate?.slice(0, 10) ?? '—'}
+      </p>
+    </div>
+  )
+}
+
+// Native HTML5 drag-and-drop — no extra dependency needed for a single
+// board with four columns (see .scratch/lings/issues/05-ticket-views.md).
+function KanbanBoard({
+  tickets,
+  onUpdated,
+}: {
+  tickets: Ticket[]
+  onUpdated: (t: Ticket) => void
+}) {
+  const [dragOverStatus, setDragOverStatus] = useState<TicketStatus | null>(
+    null,
+  )
+
+  function handleDragStart(e: React.DragEvent, ticket: Ticket) {
+    e.dataTransfer.setData('text/plain', ticket.id)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  async function handleDrop(e: React.DragEvent, status: TicketStatus) {
+    e.preventDefault()
+    setDragOverStatus(null)
+    const id = e.dataTransfer.getData('text/plain')
+    const ticket = tickets.find((t) => t.id === id)
+    if (!ticket || ticket.status === status) return
+    const res = await api(`/api/tickets/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    })
+    if (res.ok) {
+      const { ticket: updated } = await res.json()
+      onUpdated(updated)
+    }
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {STATUS_ORDER.map((status) => (
+        <div
+          key={status}
+          onDragOver={(e) => {
+            e.preventDefault()
+            setDragOverStatus(status)
+          }}
+          onDragLeave={() =>
+            setDragOverStatus((s) => (s === status ? null : s))
+          }
+          onDrop={(e) => handleDrop(e, status)}
+          className={`min-h-[8rem] rounded-[var(--radius-panel)] border p-2 ${
+            dragOverStatus === status
+              ? 'border-[var(--signal)] bg-[var(--signal-soft)]'
+              : 'border-[var(--wire)] bg-[var(--paper)]'
+          }`}
+        >
+          <h3 className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.04em] text-[var(--ink-soft)]">
+            {STATUS_LABEL[status]}
+          </h3>
+          <div className="flex flex-col gap-2">
+            {tickets
+              .filter((t) => t.status === status)
+              .map((t) => (
+                <KanbanCard
+                  key={t.id}
+                  ticket={t}
+                  onDragStart={handleDragStart}
+                />
+              ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function GanttChart({ tickets }: { tickets: Ticket[] }) {
+  const scheduled = tickets.filter((t) => t.startDate && t.dueDate)
+  const range = useMemo(() => {
+    if (scheduled.length === 0) return null
+    const starts = scheduled.map((t) => new Date(t.startDate!).getTime())
+    const ends = scheduled.map((t) => new Date(t.dueDate!).getTime())
+    const min = Math.min(...starts)
+    const max = Math.max(...ends)
+    return { min, max: Math.max(max, min + 24 * 60 * 60 * 1000) }
+  }, [scheduled])
+
+  return (
+    <div className="flex flex-col gap-1">
+      {tickets.map((t) => {
+        const hasBothDates = t.startDate && t.dueDate
+        const left =
+          hasBothDates && range
+            ? ((new Date(t.startDate!).getTime() - range.min) /
+                (range.max - range.min)) *
+              100
+            : 0
+        const width =
+          hasBothDates && range
+            ? Math.max(
+                ((new Date(t.dueDate!).getTime() -
+                  new Date(t.startDate!).getTime()) /
+                  (range.max - range.min)) *
+                  100,
+                2,
+              )
+            : 0
+
+        return (
+          <div key={t.id} className="flex items-center gap-3">
+            <div className="w-40 flex-shrink-0 truncate text-sm text-[var(--ink)]">
+              {t.title}
+            </div>
+            <div className="relative h-6 flex-1 rounded-[var(--radius-control)] bg-[var(--paper)]">
+              {hasBothDates ? (
+                <div
+                  className="absolute top-0.5 h-5 rounded-[var(--radius-control)]"
+                  style={{
+                    left: `${left}%`,
+                    width: `${width}%`,
+                    backgroundColor: `var(--status-${
+                      t.status === 'in_progress' ? 'progress' : t.status
+                    })`,
+                  }}
+                  title={`${t.startDate?.slice(0, 10)} → ${t.dueDate?.slice(0, 10)}`}
+                />
+              ) : (
+                <div className="flex h-full items-center px-2 font-mono text-xs text-[var(--ink-soft)]">
+                  No dates set
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function ListView({
+  tickets,
+  onUpdated,
+}: {
+  tickets: Ticket[]
+  onUpdated: (t: Ticket) => void
+}) {
+  async function cycleStatus(t: Ticket) {
+    const next =
+      STATUS_ORDER[(STATUS_ORDER.indexOf(t.status) + 1) % STATUS_ORDER.length]
+    const res = await api(`/api/tickets/${t.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: next }),
+    })
+    if (res.ok) {
+      const { ticket: updated } = await res.json()
+      onUpdated(updated)
+    }
+  }
+
+  return (
+    <ul className="divide-y divide-[var(--wire)] rounded-[var(--radius-panel)] border border-[var(--wire)]">
+      {tickets.map((t) => (
+        <li
+          key={t.id}
+          className="flex items-center gap-3 px-3 py-1.5 hover:bg-[var(--signal-soft)]"
+        >
+          <button
+            type="button"
+            onClick={() => cycleStatus(t)}
+            title="Click to advance status"
+          >
+            <StatusBadge tone={STATUS_TONE[t.status]} label={STATUS_LABEL[t.status]} />
+          </button>
+          <span className="min-w-0 flex-1 truncate text-sm text-[var(--ink)]">
+            {t.title}
+          </span>
+          <span className="flex-shrink-0 font-mono text-xs text-[var(--ink-soft)]">
+            {t.startDate?.slice(0, 10) ?? '—'} → {t.dueDate?.slice(0, 10) ?? '—'}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function TicketRow({
   ticket,
   onUpdated,
@@ -383,6 +625,7 @@ function TicketsPage() {
   const [folders, setFolders] = useState<Folder[] | null>(null)
   const [tickets, setTickets] = useState<Ticket[] | null>(null)
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null)
+  const [view, setView] = useState<ViewName>('table')
 
   useEffect(() => {
     api('/api/folders').then(async (res) => {
@@ -404,6 +647,15 @@ function TicketsPage() {
       setTickets(data.tickets)
     })
   }, [authed, selectedFolderId])
+
+  // Shared by every view (table/kanban/gantt/list) so a status change made
+  // in one view is reflected in the others immediately, no reload needed
+  // (see .scratch/lings/issues/05-ticket-views.md).
+  function handleTicketUpdated(updated: Ticket) {
+    setTickets((prev) =>
+      (prev ?? []).map((x) => (x.id === updated.id ? updated : x)),
+    )
+  }
 
   const selectedFolderName = useMemo(() => {
     if (!selectedFolderId || !folders) return 'All folders'
@@ -453,11 +705,13 @@ function TicketsPage() {
           </div>
         )}
 
+        <ViewTabs view={view} onChange={setView} />
+
         {tickets === null ? (
           <p className="text-sm text-[var(--ink-soft)]">Loading tickets…</p>
         ) : tickets.length === 0 ? (
           <p className="text-sm text-[var(--ink-soft)]">No tickets here yet.</p>
-        ) : (
+        ) : view === 'table' ? (
           <Table>
             <thead>
               <tr>
@@ -470,20 +724,16 @@ function TicketsPage() {
             </thead>
             <tbody>
               {tickets.map((t) => (
-                <TicketRow
-                  key={t.id}
-                  ticket={t}
-                  onUpdated={(updated) =>
-                    setTickets((prev) =>
-                      (prev ?? []).map((x) =>
-                        x.id === updated.id ? updated : x,
-                      ),
-                    )
-                  }
-                />
+                <TicketRow key={t.id} ticket={t} onUpdated={handleTicketUpdated} />
               ))}
             </tbody>
           </Table>
+        ) : view === 'kanban' ? (
+          <KanbanBoard tickets={tickets} onUpdated={handleTicketUpdated} />
+        ) : view === 'gantt' ? (
+          <GanttChart tickets={tickets} />
+        ) : (
+          <ListView tickets={tickets} onUpdated={handleTicketUpdated} />
         )}
       </section>
     </main>
