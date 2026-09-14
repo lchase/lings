@@ -119,6 +119,32 @@ export const folders = sqliteTable(
   (table) => ({ parentIdIdx: index('folders_parentId_idx').on(table.parentId) }),
 )
 
+// Free-text markdown laws doc scoped to a folder, or global when folderId is
+// null (see .scratch/lings/issues/06-laws-and-permissions.md). At most one
+// row per scope, enforced at the application layer (upsert-by-scope) rather
+// than a unique index, since sqlite treats every NULL as distinct and so
+// can't uniquely constrain the single global row.
+export const lawsDocs = sqliteTable(
+  'laws_docs',
+  {
+    id: text('id').primaryKey(),
+    folderId: text('folder_id').references(() => folders.id, {
+      onDelete: 'cascade',
+    }),
+    content: text('content').notNull().default(''),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({
+    folderIdIdx: index('laws_docs_folderId_idx').on(table.folderId),
+  }),
+)
+
 export const TICKET_STATUSES = ['backlog', 'in_progress', 'qa', 'done'] as const
 export type TicketStatus = (typeof TICKET_STATUSES)[number]
 

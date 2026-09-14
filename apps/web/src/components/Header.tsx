@@ -38,6 +38,13 @@ export default function Header() {
             Tickets
           </Link>
           <Link
+            to="/laws"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Laws
+          </Link>
+          <Link
             to="/styleguide"
             className="nav-link"
             activeProps={{ className: 'nav-link is-active' }}

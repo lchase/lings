@@ -15,6 +15,13 @@
       "when": 1789356517654,
       "tag": "0001_previous_baron_strucker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789360457946,
+      "tag": "0002_familiar_the_captain",
+      "breakpoints": true
     }
   ]
 }

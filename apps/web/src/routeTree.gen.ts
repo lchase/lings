@@ -12,13 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as LawsRouteImport } from './routes/laws'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as ApiFoldersRouteImport } from './routes/api/folders'
+import { Route as ApiLawsDocsRouteImport } from './routes/api/laws-docs'
 import { Route as ApiMeRouteImport } from './routes/api/me'
 import { Route as ApiTicketsRouteImport } from './routes/api/tickets'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiLawsDocsEffectiveRouteImport } from './routes/api/laws-docs/effective'
 import { Route as ApiTicketsIdRouteImport } from './routes/api/tickets/$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -34,6 +37,11 @@ const AboutRoute = AboutRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LawsRoute = LawsRouteImport.update({
+  id: '/laws',
+  path: '/laws',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -56,6 +64,11 @@ const ApiFoldersRoute = ApiFoldersRouteImport.update({
   path: '/api/folders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLawsDocsRoute = ApiLawsDocsRouteImport.update({
+  id: '/api/laws-docs',
+  path: '/api/laws-docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMeRoute = ApiMeRouteImport.update({
   id: '/api/me',
   path: '/api/me',
@@ -71,6 +84,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLawsDocsEffectiveRoute = ApiLawsDocsEffectiveRouteImport.update({
+  id: '/effective',
+  path: '/effective',
+  getParentRoute: () => ApiLawsDocsRoute,
+} as any)
 const ApiTicketsIdRoute = ApiTicketsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -81,26 +99,32 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
   '/api/folders': typeof ApiFoldersRoute
+  '/api/laws-docs': typeof ApiLawsDocsRouteWithChildren
   '/api/me': typeof ApiMeRoute
   '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/laws-docs/effective': typeof ApiLawsDocsEffectiveRoute
   '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
   '/api/folders': typeof ApiFoldersRoute
+  '/api/laws-docs': typeof ApiLawsDocsRouteWithChildren
   '/api/me': typeof ApiMeRoute
   '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/laws-docs/effective': typeof ApiLawsDocsEffectiveRoute
   '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
 export interface FileRoutesById {
@@ -108,13 +132,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
   '/api/folders': typeof ApiFoldersRoute
+  '/api/laws-docs': typeof ApiLawsDocsRouteWithChildren
   '/api/me': typeof ApiMeRoute
   '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/laws-docs/effective': typeof ApiLawsDocsEffectiveRoute
   '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
 export interface FileRouteTypes {
@@ -123,39 +150,48 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/dashboard'
+    | '/laws'
     | '/login'
     | '/styleguide'
     | '/tickets'
     | '/api/folders'
+    | '/api/laws-docs'
     | '/api/me'
     | '/api/tickets'
     | '/api/auth/$'
+    | '/api/laws-docs/effective'
     | '/api/tickets/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/dashboard'
+    | '/laws'
     | '/login'
     | '/styleguide'
     | '/tickets'
     | '/api/folders'
+    | '/api/laws-docs'
     | '/api/me'
     | '/api/tickets'
     | '/api/auth/$'
+    | '/api/laws-docs/effective'
     | '/api/tickets/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/dashboard'
+    | '/laws'
     | '/login'
     | '/styleguide'
     | '/tickets'
     | '/api/folders'
+    | '/api/laws-docs'
     | '/api/me'
     | '/api/tickets'
     | '/api/auth/$'
+    | '/api/laws-docs/effective'
     | '/api/tickets/$id'
   fileRoutesById: FileRoutesById
 }
@@ -163,10 +199,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRoute
+  LawsRoute: typeof LawsRoute
   LoginRoute: typeof LoginRoute
   StyleguideRoute: typeof StyleguideRoute
   TicketsRoute: typeof TicketsRoute
   ApiFoldersRoute: typeof ApiFoldersRoute
+  ApiLawsDocsRoute: typeof ApiLawsDocsRouteWithChildren
   ApiMeRoute: typeof ApiMeRoute
   ApiTicketsRoute: typeof ApiTicketsRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -193,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/laws': {
+      id: '/laws'
+      path: '/laws'
+      fullPath: '/laws'
+      preLoaderRoute: typeof LawsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -223,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiFoldersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/laws-docs': {
+      id: '/api/laws-docs'
+      path: '/api/laws-docs'
+      fullPath: '/api/laws-docs'
+      preLoaderRoute: typeof ApiLawsDocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/me': {
       id: '/api/me'
       path: '/api/me'
@@ -244,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/laws-docs/effective': {
+      id: '/api/laws-docs/effective'
+      path: '/effective'
+      fullPath: '/api/laws-docs/effective'
+      preLoaderRoute: typeof ApiLawsDocsEffectiveRouteImport
+      parentRoute: typeof ApiLawsDocsRoute
+    }
     '/api/tickets/$id': {
       id: '/api/tickets/$id'
       path: '/$id'
@@ -253,6 +312,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface ApiLawsDocsRouteChildren {
+  ApiLawsDocsEffectiveRoute: typeof ApiLawsDocsEffectiveRoute
+}
+
+const ApiLawsDocsRouteChildren: ApiLawsDocsRouteChildren = {
+  ApiLawsDocsEffectiveRoute: ApiLawsDocsEffectiveRoute,
+}
+
+const ApiLawsDocsRouteWithChildren = ApiLawsDocsRoute._addFileChildren(
+  ApiLawsDocsRouteChildren,
+)
 
 interface ApiTicketsRouteChildren {
   ApiTicketsIdRoute: typeof ApiTicketsIdRoute
@@ -270,10 +341,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRoute,
+  LawsRoute: LawsRoute,
   LoginRoute: LoginRoute,
   StyleguideRoute: StyleguideRoute,
   TicketsRoute: TicketsRoute,
   ApiFoldersRoute: ApiFoldersRoute,
+  ApiLawsDocsRoute: ApiLawsDocsRouteWithChildren,
   ApiMeRoute: ApiMeRoute,
   ApiTicketsRoute: ApiTicketsRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
