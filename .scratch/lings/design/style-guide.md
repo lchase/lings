@@ -96,8 +96,9 @@ needed beyond what's already in `tailwind.config`):
 ## Components
 
 Implemented as `@lings/ui` primitives (`Button`, `Input`, `Select`,
-`Textarea`, `Table`, `Card`, `StatusBadge`) so `apps/web` and `apps/desktop`
-share one implementation instead of hand-rolled Tailwind per screen.
+`Textarea`, `Table`, `Card`, `StatusBadge`, `Alert`) so `apps/web` and
+`apps/desktop` share one implementation instead of hand-rolled Tailwind per
+screen. Live reference: `/styleguide`.
 
 - **Button** — `primary` (solid `signal`, white text), `secondary` (`wire`
   border, `panel` background), `danger` (red border/text, transparent fill
@@ -112,6 +113,9 @@ share one implementation instead of hand-rolled Tailwind per screen.
   shadow at rest.
 - **StatusBadge** (the signature element, below) — small rectangular chip:
   filled dot + Plex Mono uppercase label, colored by the status table above.
+- **Alert** — `info`/`warning`/`error`/`success`, a tinted-background block
+  with a colored dot (not the whole block in saturated color) so body text
+  stays neutral `ink`/`ink-soft` and readable regardless of tone.
 
 ## Signature: signal chips
 

@@ -37,6 +37,13 @@ export default function Header() {
           >
             Tickets
           </Link>
+          <Link
+            to="/styleguide"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Style guide
+          </Link>
         </div>
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">

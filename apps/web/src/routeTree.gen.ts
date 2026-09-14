@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as TicketsRouteImport } from './routes/tickets'
 import { Route as ApiFoldersRouteImport } from './routes/api/folders'
 import { Route as ApiMeRouteImport } from './routes/api/me'
@@ -38,6 +39,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StyleguideRoute = StyleguideRouteImport.update({
+  id: '/styleguide',
+  path: '/styleguide',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TicketsRoute = TicketsRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
   '/api/folders': typeof ApiFoldersRoute
   '/api/me': typeof ApiMeRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
   '/api/folders': typeof ApiFoldersRoute
   '/api/me': typeof ApiMeRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
   '/api/folders': typeof ApiFoldersRoute
   '/api/me': typeof ApiMeRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/dashboard'
     | '/login'
+    | '/styleguide'
     | '/tickets'
     | '/api/folders'
     | '/api/me'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/dashboard'
     | '/login'
+    | '/styleguide'
     | '/tickets'
     | '/api/folders'
     | '/api/me'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/dashboard'
     | '/login'
+    | '/styleguide'
     | '/tickets'
     | '/api/folders'
     | '/api/me'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  StyleguideRoute: typeof StyleguideRoute
   TicketsRoute: typeof TicketsRoute
   ApiFoldersRoute: typeof ApiFoldersRoute
   ApiMeRoute: typeof ApiMeRoute
@@ -187,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/styleguide': {
+      id: '/styleguide'
+      path: '/styleguide'
+      fullPath: '/styleguide'
+      preLoaderRoute: typeof StyleguideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tickets': {
@@ -251,6 +271,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  StyleguideRoute: StyleguideRoute,
   TicketsRoute: TicketsRoute,
   ApiFoldersRoute: ApiFoldersRoute,
   ApiMeRoute: ApiMeRoute,

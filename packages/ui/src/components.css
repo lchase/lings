@@ -151,3 +151,58 @@ textarea.lings-field {
   flex-shrink: 0;
   background: currentColor;
 }
+
+.lings-alert {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  border: 1px solid;
+  border-radius: var(--radius-panel);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+
+.lings-alert-dot {
+  margin-top: 0.4rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: currentColor;
+}
+
+.lings-alert-title {
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+}
+
+.lings-alert-body {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.lings-alert-info {
+  color: var(--status-qa);
+  border-color: var(--status-qa);
+  background: color-mix(in oklab, var(--status-qa) 10%, var(--panel));
+}
+
+.lings-alert-warning {
+  color: var(--status-progress);
+  border-color: var(--status-progress);
+  background: color-mix(in oklab, var(--status-progress) 10%, var(--panel));
+}
+
+.lings-alert-error {
+  color: var(--status-error);
+  border-color: var(--status-error);
+  background: color-mix(in oklab, var(--status-error) 10%, var(--panel));
+}
+
+.lings-alert-success {
+  color: var(--status-done);
+  border-color: var(--status-done);
+  background: color-mix(in oklab, var(--status-done) 10%, var(--panel));
+}
