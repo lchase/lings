@@ -1,8 +1,8 @@
-# 16 — Playbook runs & ticket linkage
+# 17 — Playbook runs & ticket linkage
 
 **What to build:** Tie a playbook run to a ticket, surface that run's history inline on the ticket detail view, and support ad-hoc runs (no saved playbook) alongside recipe-backed ones.
 
-**Blocked by:** 15 — agent-call step + approval gate, 04 — Ticket views.
+**Blocked by:** 16 — agent-call step + approval gate, 05 — Ticket views.
 
 **Status:** ready-for-agent
 

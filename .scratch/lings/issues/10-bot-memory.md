@@ -1,8 +1,8 @@
-# 09 — Bot memory
+# 10 — Bot memory
 
 **What to build:** A bot can journal a learning mid-session via an explicit `remember(content)` tool call, and a user can view, edit, or delete any bot's memory entries.
 
-**Blocked by:** 08 — Bots: entity + ad-hoc chat.
+**Blocked by:** 09 — Bots: entity + ad-hoc chat.
 
 **Status:** ready-for-agent
 

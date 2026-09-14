@@ -1,8 +1,8 @@
-# 10 — Bot skills config
+# 11 — Bot skills config
 
 **What to build:** A global `skills` library (name + instruction text) and a per-bot skill allowlist, distinct from the tool/MCP allowlist — a skill is a behavior toggle, not a callable function.
 
-**Blocked by:** 08 — Bots: entity + ad-hoc chat.
+**Blocked by:** 09 — Bots: entity + ad-hoc chat.
 
 **Status:** ready-for-agent
 

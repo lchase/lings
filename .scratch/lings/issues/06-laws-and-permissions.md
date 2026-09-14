@@ -1,4 +1,4 @@
-# 05 — Laws & permissions
+# 06 — Laws & permissions
 
 **What to build:** A free-text markdown laws doc scoped to a folder (or global, as fallback), with nearest-ancestor resolution: given any folder, find the effective doc by walking up the tree toward root, falling back to the global doc if none is found along the way.
 
