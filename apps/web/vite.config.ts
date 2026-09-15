@@ -11,7 +11,15 @@ const config = defineConfig({
   resolve: { tsconfigPaths: true },
   plugins: [
     devtools(),
-    nitro({ rollupConfig: { external: [/^@sentry\//] } }),
+    nitro({
+      features: { websocket: true },
+      // Nitro's dev route scanner only walks scanDirs (default: none) for
+      // its own `routes/` file convention — it doesn't fall back to
+      // rootDir the way the production build does. Needed so
+      // apps/web/routes/fleet.ts (the WS handler) is actually registered.
+      scanDirs: ['.'],
+      rollupConfig: { external: [/^@sentry\//] },
+    }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),

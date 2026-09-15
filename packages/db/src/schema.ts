@@ -3,6 +3,7 @@ import {
   sqliteTable,
   text,
   integer,
+  real,
   index,
   type AnySQLiteColumn,
 } from 'drizzle-orm/sqlite-core'
@@ -144,6 +145,39 @@ export const lawsDocs = sqliteTable(
     folderIdIdx: index('laws_docs_folderId_idx').on(table.folderId),
   }),
 )
+
+// Mirrors @lings/shared-types' SessionStatus — kept as a plain literal tuple
+// here rather than importing it, since @lings/db has no dependency on
+// @lings/shared-types (see .scratch/lings/issues/08-websocket-fleet-view.md).
+export const AGENT_SESSION_STATUSES = [
+  'idle',
+  'generating',
+  'waiting-approval',
+  'error',
+  'done',
+] as const
+export type AgentSessionStatus = (typeof AGENT_SESSION_STATUSES)[number]
+
+// Minimal shape for ticket 08 (id, status, cost fields) — no playbook_run_id
+// / bot_id / parent_session_id FKs yet, since playbooks and bots don't exist
+// in this schema; full shape extends later per SPEC.md's core data model.
+export const agentSessions = sqliteTable('agent_sessions', {
+  id: text('id').primaryKey(),
+  status: text('status', { enum: AGENT_SESSION_STATUSES })
+    .default('idle')
+    .notNull(),
+  tokensIn: integer('tokens_in').default(0).notNull(),
+  tokensOut: integer('tokens_out').default(0).notNull(),
+  costUsd: real('cost_usd').default(0).notNull(),
+  contextPct: integer('context_pct').default(0).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => new Date())
+    .notNull(),
+})
 
 export const TICKET_STATUSES = ['backlog', 'in_progress', 'qa', 'done'] as const
 export type TicketStatus = (typeof TICKET_STATUSES)[number]

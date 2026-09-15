@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as LawsRouteImport } from './routes/laws'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
@@ -37,6 +38,11 @@ const AboutRoute = AboutRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetRoute = FleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LawsRoute = LawsRouteImport.update({
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/fleet': typeof FleetRoute
   '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/fleet': typeof FleetRoute
   '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/dashboard': typeof DashboardRoute
+  '/fleet': typeof FleetRoute
   '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/dashboard'
+    | '/fleet'
     | '/laws'
     | '/login'
     | '/styleguide'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/dashboard'
+    | '/fleet'
     | '/laws'
     | '/login'
     | '/styleguide'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/dashboard'
+    | '/fleet'
     | '/laws'
     | '/login'
     | '/styleguide'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   DashboardRoute: typeof DashboardRoute
+  FleetRoute: typeof FleetRoute
   LawsRoute: typeof LawsRoute
   LoginRoute: typeof LoginRoute
   StyleguideRoute: typeof StyleguideRoute
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet': {
+      id: '/fleet'
+      path: '/fleet'
+      fullPath: '/fleet'
+      preLoaderRoute: typeof FleetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/laws': {
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   DashboardRoute: DashboardRoute,
+  FleetRoute: FleetRoute,
   LawsRoute: LawsRoute,
   LoginRoute: LoginRoute,
   StyleguideRoute: StyleguideRoute,
