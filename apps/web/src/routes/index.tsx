@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PLACEHOLDER_STATUS } from '@lings/agent-runner'
+import { MockAgentRunner } from '@lings/agent-runner'
 import { Placeholder } from '@lings/ui'
-import type { SessionStatus } from '@lings/shared-types'
 
 export const Route = createFileRoute('/')({ component: App })
 
-const scaffoldStatus: SessionStatus = PLACEHOLDER_STATUS
+const scaffoldStatus = new MockAgentRunner().start({ playbookRunId: 'scaffold-check' })
+  .sessionId
 
 function App() {
   return (
@@ -72,7 +72,7 @@ function App() {
       <section className="island-shell mt-8 rounded-lg p-6">
         <p className="island-kicker mb-2">Workspace scaffold check</p>
         <p className="m-0 text-sm text-[var(--ink-soft)]">
-          <Placeholder /> reachable from @lings/web, agent-runner status:{' '}
+          <Placeholder /> reachable from @lings/web, mock agent session:{' '}
           {scaffoldStatus}
         </p>
       </section>
