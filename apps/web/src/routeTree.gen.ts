@@ -11,17 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as BotsRouteImport } from './routes/bots'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as LawsRouteImport } from './routes/laws'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as StyleguideRouteImport } from './routes/styleguide'
 import { Route as TicketsRouteImport } from './routes/tickets'
+import { Route as ApiBotsRouteImport } from './routes/api/bots'
 import { Route as ApiFoldersRouteImport } from './routes/api/folders'
 import { Route as ApiLawsDocsRouteImport } from './routes/api/laws-docs'
 import { Route as ApiMeRouteImport } from './routes/api/me'
 import { Route as ApiTicketsRouteImport } from './routes/api/tickets'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiBotsIdRouteImport } from './routes/api/bots/$id'
 import { Route as ApiLawsDocsEffectiveRouteImport } from './routes/api/laws-docs/effective'
 import { Route as ApiTicketsIdRouteImport } from './routes/api/tickets/$id'
 
@@ -33,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BotsRoute = BotsRouteImport.update({
+  id: '/bots',
+  path: '/bots',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -65,6 +73,11 @@ const TicketsRoute = TicketsRouteImport.update({
   path: '/tickets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBotsRoute = ApiBotsRouteImport.update({
+  id: '/api/bots',
+  path: '/api/bots',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiFoldersRoute = ApiFoldersRouteImport.update({
   id: '/api/folders',
   path: '/api/folders',
@@ -90,6 +103,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBotsIdRoute = ApiBotsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiBotsRoute,
+} as any)
 const ApiLawsDocsEffectiveRoute = ApiLawsDocsEffectiveRouteImport.update({
   id: '/effective',
   path: '/effective',
@@ -104,34 +122,40 @@ const ApiTicketsIdRoute = ApiTicketsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bots': typeof BotsRoute
   '/dashboard': typeof DashboardRoute
   '/fleet': typeof FleetRoute
   '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
+  '/api/bots': typeof ApiBotsRouteWithChildren
   '/api/folders': typeof ApiFoldersRoute
   '/api/laws-docs': typeof ApiLawsDocsRouteWithChildren
   '/api/me': typeof ApiMeRoute
   '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/bots/$id': typeof ApiBotsIdRoute
   '/api/laws-docs/effective': typeof ApiLawsDocsEffectiveRoute
   '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bots': typeof BotsRoute
   '/dashboard': typeof DashboardRoute
   '/fleet': typeof FleetRoute
   '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
+  '/api/bots': typeof ApiBotsRouteWithChildren
   '/api/folders': typeof ApiFoldersRoute
   '/api/laws-docs': typeof ApiLawsDocsRouteWithChildren
   '/api/me': typeof ApiMeRoute
   '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/bots/$id': typeof ApiBotsIdRoute
   '/api/laws-docs/effective': typeof ApiLawsDocsEffectiveRoute
   '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
@@ -139,17 +163,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/bots': typeof BotsRoute
   '/dashboard': typeof DashboardRoute
   '/fleet': typeof FleetRoute
   '/laws': typeof LawsRoute
   '/login': typeof LoginRoute
   '/styleguide': typeof StyleguideRoute
   '/tickets': typeof TicketsRoute
+  '/api/bots': typeof ApiBotsRouteWithChildren
   '/api/folders': typeof ApiFoldersRoute
   '/api/laws-docs': typeof ApiLawsDocsRouteWithChildren
   '/api/me': typeof ApiMeRoute
   '/api/tickets': typeof ApiTicketsRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/bots/$id': typeof ApiBotsIdRoute
   '/api/laws-docs/effective': typeof ApiLawsDocsEffectiveRoute
   '/api/tickets/$id': typeof ApiTicketsIdRoute
 }
@@ -158,51 +185,60 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/bots'
     | '/dashboard'
     | '/fleet'
     | '/laws'
     | '/login'
     | '/styleguide'
     | '/tickets'
+    | '/api/bots'
     | '/api/folders'
     | '/api/laws-docs'
     | '/api/me'
     | '/api/tickets'
     | '/api/auth/$'
+    | '/api/bots/$id'
     | '/api/laws-docs/effective'
     | '/api/tickets/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/bots'
     | '/dashboard'
     | '/fleet'
     | '/laws'
     | '/login'
     | '/styleguide'
     | '/tickets'
+    | '/api/bots'
     | '/api/folders'
     | '/api/laws-docs'
     | '/api/me'
     | '/api/tickets'
     | '/api/auth/$'
+    | '/api/bots/$id'
     | '/api/laws-docs/effective'
     | '/api/tickets/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/bots'
     | '/dashboard'
     | '/fleet'
     | '/laws'
     | '/login'
     | '/styleguide'
     | '/tickets'
+    | '/api/bots'
     | '/api/folders'
     | '/api/laws-docs'
     | '/api/me'
     | '/api/tickets'
     | '/api/auth/$'
+    | '/api/bots/$id'
     | '/api/laws-docs/effective'
     | '/api/tickets/$id'
   fileRoutesById: FileRoutesById
@@ -210,12 +246,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BotsRoute: typeof BotsRoute
   DashboardRoute: typeof DashboardRoute
   FleetRoute: typeof FleetRoute
   LawsRoute: typeof LawsRoute
   LoginRoute: typeof LoginRoute
   StyleguideRoute: typeof StyleguideRoute
   TicketsRoute: typeof TicketsRoute
+  ApiBotsRoute: typeof ApiBotsRouteWithChildren
   ApiFoldersRoute: typeof ApiFoldersRoute
   ApiLawsDocsRoute: typeof ApiLawsDocsRouteWithChildren
   ApiMeRoute: typeof ApiMeRoute
@@ -237,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bots': {
+      id: '/bots'
+      path: '/bots'
+      fullPath: '/bots'
+      preLoaderRoute: typeof BotsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -281,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TicketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/bots': {
+      id: '/api/bots'
+      path: '/api/bots'
+      fullPath: '/api/bots'
+      preLoaderRoute: typeof ApiBotsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/folders': {
       id: '/api/folders'
       path: '/api/folders'
@@ -316,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/bots/$id': {
+      id: '/api/bots/$id'
+      path: '/$id'
+      fullPath: '/api/bots/$id'
+      preLoaderRoute: typeof ApiBotsIdRouteImport
+      parentRoute: typeof ApiBotsRoute
+    }
     '/api/laws-docs/effective': {
       id: '/api/laws-docs/effective'
       path: '/effective'
@@ -332,6 +391,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface ApiBotsRouteChildren {
+  ApiBotsIdRoute: typeof ApiBotsIdRoute
+}
+
+const ApiBotsRouteChildren: ApiBotsRouteChildren = {
+  ApiBotsIdRoute: ApiBotsIdRoute,
+}
+
+const ApiBotsRouteWithChildren =
+  ApiBotsRoute._addFileChildren(ApiBotsRouteChildren)
 
 interface ApiLawsDocsRouteChildren {
   ApiLawsDocsEffectiveRoute: typeof ApiLawsDocsEffectiveRoute
@@ -360,12 +430,14 @@ const ApiTicketsRouteWithChildren = ApiTicketsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BotsRoute: BotsRoute,
   DashboardRoute: DashboardRoute,
   FleetRoute: FleetRoute,
   LawsRoute: LawsRoute,
   LoginRoute: LoginRoute,
   StyleguideRoute: StyleguideRoute,
   TicketsRoute: TicketsRoute,
+  ApiBotsRoute: ApiBotsRouteWithChildren,
   ApiFoldersRoute: ApiFoldersRoute,
   ApiLawsDocsRoute: ApiLawsDocsRouteWithChildren,
   ApiMeRoute: ApiMeRoute,

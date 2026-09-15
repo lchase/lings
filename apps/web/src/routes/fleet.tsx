@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Card, StatusBadge } from '@lings/ui'
+import { Button, Card, Select, StatusBadge } from '@lings/ui'
 import type { StatusTone } from '@lings/ui'
 import type { SessionStatus } from '@lings/shared-types'
 import { getStoredAuthToken } from '../lib/auth-client'
 import { useFleetSocket } from '../lib/use-fleet-socket'
 import { agentSessionQueryKey, emptyAgentSessionEntry } from '../lib/ws-cache'
+
+type Bot = { id: string; name: string }
 
 export const Route = createFileRoute('/fleet')({ component: FleetPage })
 
@@ -84,6 +86,8 @@ function FleetPage() {
   const [authed, setAuthed] = useState(false)
   const [sessionIds, setSessionIds] = useState<string[] | null>(null)
   const [starting, setStarting] = useState(false)
+  const [botOptions, setBotOptions] = useState<Bot[]>([])
+  const [selectedBotId, setSelectedBotId] = useState<string>('')
 
   useEffect(() => {
     api('/api/agent-sessions').then(async (res) => {
@@ -99,9 +103,22 @@ function FleetPage() {
     })
   }, [navigate, subscribe])
 
+  useEffect(() => {
+    if (!authed) return
+    api('/api/bots').then(async (res) => {
+      if (!res.ok) return
+      const data: { bots: Bot[]; defaultBotId: string } = await res.json()
+      setBotOptions(data.bots)
+      setSelectedBotId(data.defaultBotId)
+    })
+  }, [authed])
+
   async function handleStart() {
     setStarting(true)
-    const res = await api('/api/agent-sessions', { method: 'POST' })
+    const res = await api('/api/agent-sessions', {
+      method: 'POST',
+      body: JSON.stringify({ botId: selectedBotId }),
+    })
     setStarting(false)
     if (res.ok) {
       const { session }: { session: AgentSessionRow } = await res.json()
@@ -124,9 +141,28 @@ function FleetPage() {
         <h1 className="display-title text-2xl font-bold text-[var(--ink)]">
           Fleet
         </h1>
-        <Button type="button" variant="primary" onClick={handleStart} disabled={starting}>
-          {starting ? 'Starting…' : '+ Start mock session'}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Select
+            value={selectedBotId}
+            onChange={(e) => setSelectedBotId(e.target.value)}
+            disabled={botOptions.length === 0}
+            aria-label="Bot"
+          >
+            {botOptions.map((bot) => (
+              <option key={bot.id} value={bot.id}>
+                {bot.name}
+              </option>
+            ))}
+          </Select>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={handleStart}
+            disabled={starting || !selectedBotId}
+          >
+            {starting ? 'Starting…' : '+ Start chat as bot'}
+          </Button>
+        </div>
       </div>
 
       {sessionIds.length === 0 ? (

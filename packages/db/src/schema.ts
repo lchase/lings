@@ -158,18 +158,31 @@ export const AGENT_SESSION_STATUSES = [
 ] as const
 export type AgentSessionStatus = (typeof AGENT_SESSION_STATUSES)[number]
 
-// Minimal shape for ticket 08 (id, status, cost fields) — no playbook_run_id
-// / bot_id / parent_session_id FKs yet, since playbooks and bots don't exist
-// in this schema; full shape extends later per SPEC.md's core data model.
-export const agentSessions = sqliteTable('agent_sessions', {
+// Global, not folder-scoped (SPEC.md "Core data model"). toolsConfig and
+// delegationAllowlist are flat string-id allowlists, not per-tool scoping —
+// see .scratch/lings/issues/09-bots-entity-and-chat.md.
+export const BOT_MODEL_TIERS = ['fast', 'balanced', 'max'] as const
+export type BotModelTier = (typeof BOT_MODEL_TIERS)[number]
+
+export const bots = sqliteTable('bots', {
   id: text('id').primaryKey(),
-  status: text('status', { enum: AGENT_SESSION_STATUSES })
-    .default('idle')
+  name: text('name').notNull(),
+  description: text('description').notNull().default(''),
+  systemPrompt: text('system_prompt').notNull().default(''),
+  toolsConfig: text('tools_config', { mode: 'json' })
+    .$type<string[]>()
+    .notNull()
+    .default(sql`'[]'`),
+  delegationAllowlist: text('delegation_allowlist', { mode: 'json' })
+    .$type<string[]>()
+    .notNull()
+    .default(sql`'[]'`),
+  // Regenerated client-side only (new random seed, re-rendered instantly) —
+  // never a stored image, never an image-gen API call.
+  avatarSeed: text('avatar_seed').notNull(),
+  defaultModelTier: text('default_model_tier', { enum: BOT_MODEL_TIERS })
+    .default('balanced')
     .notNull(),
-  tokensIn: integer('tokens_in').default(0).notNull(),
-  tokensOut: integer('tokens_out').default(0).notNull(),
-  costUsd: real('cost_usd').default(0).notNull(),
-  contextPct: integer('context_pct').default(0).notNull(),
   createdAt: integer('created_at', { mode: 'timestamp_ms' })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .notNull(),
@@ -178,6 +191,34 @@ export const agentSessions = sqliteTable('agent_sessions', {
     .$onUpdate(() => new Date())
     .notNull(),
 })
+
+// Extends ticket 08's minimal shape with the required bot_id FK (ticket 09);
+// no playbook_run_id / parent_session_id yet, since playbooks don't exist in
+// this schema — full shape extends later per SPEC.md's core data model.
+export const agentSessions = sqliteTable(
+  'agent_sessions',
+  {
+    id: text('id').primaryKey(),
+    botId: text('bot_id')
+      .notNull()
+      .references(() => bots.id),
+    status: text('status', { enum: AGENT_SESSION_STATUSES })
+      .default('idle')
+      .notNull(),
+    tokensIn: integer('tokens_in').default(0).notNull(),
+    tokensOut: integer('tokens_out').default(0).notNull(),
+    costUsd: real('cost_usd').default(0).notNull(),
+    contextPct: integer('context_pct').default(0).notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => ({ botIdIdx: index('agent_sessions_botId_idx').on(table.botId) }),
+)
 
 export const TICKET_STATUSES = ['backlog', 'in_progress', 'qa', 'done'] as const
 export type TicketStatus = (typeof TICKET_STATUSES)[number]

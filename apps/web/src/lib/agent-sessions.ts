@@ -33,10 +33,14 @@ function persistAndBroadcast(
 // the fleet hub. The scripted driver runs in the background — the caller
 // gets the freshly-created row back immediately (see
 // .scratch/lings/issues/08-websocket-fleet-view.md).
-export async function startMockAgentSession() {
+//
+// botId is required (agent_sessions.bot_id is a required FK — every
+// session, including a raw ad-hoc chat, runs as some bot; see
+// .scratch/lings/issues/09-bots-entity-and-chat.md), and must already exist.
+export async function startMockAgentSession(botId: string) {
   const [row] = await db
     .insert(agentSessions)
-    .values({ id: crypto.randomUUID(), status: 'idle' })
+    .values({ id: crypto.randomUUID(), botId, status: 'idle' })
     .returning()
 
   const handle = mockRunner.start({ playbookRunId: row.id })

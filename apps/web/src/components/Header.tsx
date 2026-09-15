@@ -45,6 +45,13 @@ export default function Header() {
             Fleet
           </Link>
           <Link
+            to="/bots"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Bots
+          </Link>
+          <Link
             to="/laws"
             className="nav-link"
             activeProps={{ className: 'nav-link is-active' }}

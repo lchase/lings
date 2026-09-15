@@ -29,6 +29,13 @@
       "when": 1789443363049,
       "tag": "0003_perfect_romulus",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1789444866937,
+      "tag": "0004_wild_spirit",
+      "breakpoints": true
     }
   ]
 }
